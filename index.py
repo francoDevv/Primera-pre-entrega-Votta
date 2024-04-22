@@ -1,9 +1,15 @@
 def registrar_usuario(): #Funcion para registrar usuario
     usuario = input("Ingrese nombre de usuario: ")
+    if len(usuario) == 0:
+        print("Debes ingresar al menos un caracter en el nombre de usuario")
+        return
     if usuario in base_de_datos_usuarios:
         print("El usuario ya existe. Por favor, elige otro nombre de usuario.")
         return
     contraseña = input("Ingrese contraseña: ")
+    if len(contraseña) == 0:
+        print("La constraseña no puede estar vacia")
+        return
     base_de_datos_usuarios[usuario] = contraseña
     print("Usuario registrado exitosamente.")
 
