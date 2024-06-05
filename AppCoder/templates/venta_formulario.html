@@ -1,0 +1,14 @@
+{% extends 'padre.html' %}
+
+{% block contenidoQueCambia %}
+  
+<form action="{% url 'VentaFormulario' %}" method="post">{% csrf_token %}
+
+  {{formularioVenta.as_p}}
+
+  <button type="submit"> Crear </button>
+
+</form>
+
+{% endblock contenidoQueCambia %}
+  

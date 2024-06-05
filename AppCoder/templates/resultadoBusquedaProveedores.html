@@ -1,0 +1,37 @@
+{% extends 'padre.html' %}
+
+{% block contenidoQueCambia %}
+  
+<p>Buscamos el proveedor con el cuil: {{cuil}}</p>
+
+{% if proveedores %}
+
+<ul>
+  {% for proveedor in proveedores %}
+    
+    <li>
+      Razon_social: {{proveedor.razon_social}} 
+    </li>
+    <li>
+      Email: {{proveedor.email}}
+    </li>
+    <li>
+      Cuil: {{proveedor.cuil}}
+    </li>
+      
+  {% endfor %}
+
+</ul>
+
+{% else %}
+
+  <p>No hubo coincidencias!</p>
+
+{% endif %}
+
+
+  
+
+
+{% endblock contenidoQueCambia %}
+  

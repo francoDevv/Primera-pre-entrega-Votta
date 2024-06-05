@@ -1,0 +1,37 @@
+{% extends 'padre.html' %}
+
+{% block contenidoQueCambia %}
+  
+<p>Buscamos los productos con el nombre: {{nombre}}</p>
+
+{% if productos %}
+
+<ul>
+  {% for producto in productos %}
+    
+    <li>
+      Nombre: {{producto.nombre}} 
+    </li>
+    <li>
+      Precio: {{producto.precio}}
+    </li>
+    <li>
+      Stock: {{producto.cantidad}}
+    </li>
+      
+  {% endfor %}
+
+</ul>
+
+{% else %}
+
+  <p>No hubo coincidencias!</p>
+
+{% endif %}
+
+
+  
+
+
+{% endblock contenidoQueCambia %}
+  

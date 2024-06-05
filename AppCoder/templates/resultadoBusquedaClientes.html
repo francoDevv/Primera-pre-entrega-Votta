@@ -1,0 +1,37 @@
+{% extends 'padre.html' %}
+
+{% block contenidoQueCambia %}
+  
+<p>Buscamos los clientes con el nombre: {{nombre}}</p>
+
+{% if clientes %}
+
+<ul>
+  {% for cliente in clientes %}
+    
+    <li>
+      Nombre: {{cliente.nombre}} 
+    </li>
+    <li>
+      Apellido: {{cliente.apellido}}
+    </li>
+    <li>
+      Email: {{cliente.email}}
+    </li>
+      
+  {% endfor %}
+
+</ul>
+
+{% else %}
+
+  <p>No hubo coincidencias!</p>
+
+{% endif %}
+
+
+  
+
+
+{% endblock contenidoQueCambia %}
+  

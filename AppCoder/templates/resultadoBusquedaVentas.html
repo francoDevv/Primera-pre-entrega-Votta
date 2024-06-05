@@ -1,0 +1,37 @@
+{% extends 'padre.html' %}
+
+{% block contenidoQueCambia %}
+  
+<p>Buscamos el numero de orden: {{num_orden}}</p>
+
+{% if ventas %}
+
+<ul>
+  {% for venta in ventas %}
+    
+    <li>
+      Numero de Orden: {{venta.num_orden}} 
+    </li>
+    <li>
+      Fecha de Venta: {{venta.fecha_venta}}
+    </li>
+    <li>
+      Entregado: {{venta.entregado}}
+    </li>
+      
+  {% endfor %}
+
+</ul>
+
+{% else %}
+
+  <p>No hubo coincidencias!</p>
+
+{% endif %}
+
+
+  
+
+
+{% endblock contenidoQueCambia %}
+  

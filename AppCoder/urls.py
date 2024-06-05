@@ -1,0 +1,42 @@
+from django.urls import path
+from AppCoder.views import (
+  lista_productos, 
+  inicio, 
+  productos, 
+  clientes, 
+  proveedores, 
+  ventas,
+  producto_formulario,
+  busqueda_producto,
+  buscar_producto,
+  cliente_formulario,
+  busqueda_cliente,
+  buscar_cliente,
+  proveedor_formulario,
+  busqueda_proveedor,
+  buscar_proveedor,
+  venta_formulario,
+  busqueda_venta,
+  buscar_venta
+)
+
+urlpatterns = [
+    path('lista-productos/', lista_productos), 
+    path('', inicio, name='Inicio'), 
+    path('productos/', productos, name='Productos'), 
+    path('clientes/', clientes, name='Clientes'), 
+    path('proveedores/', proveedores, name='Proveedores'), 
+    path('ventas/', ventas, name='Ventas'), 
+    path('producto-formulario/', producto_formulario, name='ProductoFormulario'), 
+    path('busqueda-producto/', busqueda_producto, name='BusquedaProducto'), 
+    path('buscar/', buscar_producto, name='BuscarProducto'), 
+    path('cliente-formulario/', cliente_formulario, name='ClienteFormulario'), 
+    path('busqueda-cliente/', busqueda_cliente, name='BusquedaCliente'), 
+    path('buscar-cliente/', buscar_cliente, name='BuscarCliente'), 
+    path('proveedor-formulario/', proveedor_formulario, name='ProveedorFormulario'), 
+    path('busqueda-proveedor/', busqueda_proveedor, name='BusquedaProveedor'), 
+    path('buscar-proveedor/', buscar_proveedor, name='BuscarProveedor'), 
+    path('venta-formulario/', venta_formulario, name='VentaFormulario'), 
+    path('busqueda-venta/', busqueda_venta, name='BusquedaVenta'), 
+    path('buscar-venta/', buscar_venta, name='BuscarVenta'), 
+]
