@@ -1,0 +1,11 @@
+{% extends 'padre.html' %}
+
+{% block contenidoQueCambia %}
+
+<form action="{%url 'EliminaProducto' producto.id %}" method="post">{% csrf_token %}
+    <p>Estas seguro que queres eliminar el producto {{producto.nombre}}?</p>
+    <button type="submit">Confirmar</button>
+    <button><a href="{%url 'Inicio' %}">Cancelar</a></button>
+</form>
+
+{% endblock contenidoQueCambia %}

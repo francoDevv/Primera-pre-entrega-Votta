@@ -1,38 +1,42 @@
 from django.shortcuts import render
 from .models import Producto, Clientes, Proveedores, Ventas
 from .forms import ProductoFormulario, ClienteFormulario, ProveedorFormulario, VentaFormulario
-
-def lista_productos(req):
-
-  lista = Producto.objects.all()
-
-  return render(req, "lista_productos.html", {"lista_productos": lista})
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import DeleteView
 
 def inicio(req):
 
   return render(req, "inicio.html", {})
 
-def productos(req):
+def sobre_mi(req):
 
-  return render(req, "productos.html", {})
+  return render(req, "sobre_mi.html", {})
 
-def clientes(req):
+def lista_productos(req):
 
-  return render(req, "clientes.html", {})
+  lista_productos = Producto.objects.all()
 
-def proveedores(req):
+  return render(req, "productos.html", {"lista_productos": lista_productos})
 
-  return render(req, "proveedores.html", {})
+def lista_clientes(req):
 
-def ventas(req):
+  cliente = Clientes.objects.all()
 
-  return render(req, "ventas.html", {})
+  return render(req, "clientes.html", {"lista_clientes": cliente})
+
+def lista_proveedores(req):
+
+  proveedores = Proveedores.objects.all()
+
+  return render(req, "proveedores.html", {"lista_proveedores": proveedores})
+
+def lista_ventas(req):
+
+  ventas = Ventas.objects.all()
+
+  return render(req, "ventas.html", {"lista_ventas": ventas})
 
 def producto_formulario(req):
-
-  print('method: ', req.method)
-  print('POST: ', req.POST)
-
   if req.method == 'POST':
 
     formularioProducto = ProductoFormulario(req.POST)
@@ -75,6 +79,51 @@ def buscar_producto(req):
       
       return render(req, "inicio.html", {"message": "No envias el dato del nombre"})
   
+def editar_producto(req, id):
+  if req.method == 'POST':
+
+    formularioProducto = ProductoFormulario(req.POST)
+
+    if formularioProducto.is_valid():
+
+      data = formularioProducto.cleaned_data
+
+      producto = Producto.objects.get(id = id)
+
+      producto.nombre = data["nombre"]
+      producto.precio = data["precio"]
+      producto.cantidad = data["cantidad"]
+
+      producto.save()
+
+      return render(req, "inicio.html", {"message": "Producto actualizado con éxito"})
+    
+    else:
+
+      return render(req, "inicio.html", {"message": "Datos inválidos"})
+  
+  else:
+    producto = Producto.objects.get(id = id)
+
+    formularioProducto = ProductoFormulario(initial={
+      "nombre": producto.nombre,
+      "precio": producto.precio,
+      "cantidad": producto.cantidad,
+    })
+
+    return render(req, "producto_editar.html", {"formularioProducto": formularioProducto, "id" : producto.id})
+  
+class ProductoDetalle(DetailView):
+    model = Producto
+    template_name = "producto_detalle.html"
+    context_object_name = "producto"
+
+class ProductoEliminar(DeleteView):
+    model = Producto
+    template_name = 'producto_eliminar.html'
+    success_url = "/app-coder/productos/"
+    context_object_name = 'producto'
+
 def cliente_formulario(req):
 
   print('method: ', req.method)
@@ -120,6 +169,48 @@ def buscar_cliente(req):
   else:
       
       return render(req, "inicio.html", {"message": "No envias el dato del nombre"})
+  
+def editar_cliente(req, id):
+  if req.method == 'POST':
+
+    formularioCliente = ClienteFormulario(req.POST)
+
+    if formularioCliente.is_valid():
+
+      data = formularioCliente.cleaned_data
+
+      cliente = Clientes.objects.get(id = id)
+
+      cliente.nombre = data["nombre"]
+      cliente.apellido = data["apellido"]
+      cliente.email = data["email"]
+
+      cliente.save()
+
+      return render(req, "inicio.html", {"message": "Cliente actualizado con éxito"})
+    
+    else:
+
+      return render(req, "inicio.html", {"message": "Datos inválidos"})
+  
+  else:
+    cliente = Clientes.objects.get(id = id)
+
+    formularioCliente = ClienteFormulario(initial={
+      "nombre": cliente.nombre,
+      "apellido": cliente.apellido,
+      "email": cliente.email,
+    })
+
+    return render(req, "cliente_editar.html", {"formularioCliente": formularioCliente, "id" : cliente.id})
+  
+def eliminar_cliente(req, id):
+  if req.method == "POST":
+    cliente = Clientes.objects.get(id = id)
+    cliente.delete()
+
+  lista_clientes = Clientes.objects.all()
+  return render(req, "clientes.html", {"lista_clientes": lista_clientes})
 
 def proveedor_formulario(req):
 
@@ -166,6 +257,48 @@ def buscar_proveedor(req):
   else:
       
       return render(req, "inicio.html", {"message": "No envias el dato de la razon_social"})
+  
+def editar_proveedor(req, id):
+  if req.method == 'POST':
+
+    formularioProveedor = ProveedorFormulario(req.POST)
+
+    if formularioProveedor.is_valid():
+
+      data = formularioProveedor.cleaned_data
+
+      proveedor = Proveedores.objects.get(id = id)
+
+      proveedor.razon_social = data["razon_social"]
+      proveedor.email = data["email"]
+      proveedor.cuil = data["cuil"]
+
+      proveedor.save()
+
+      return render(req, "inicio.html", {"message": "Proveedor actualizado con éxito"})
+    
+    else:
+
+      return render(req, "inicio.html", {"message": "Datos inválidos"})
+  
+  else:
+    proveedor = Proveedores.objects.get(id = id)
+
+    formularioProveedor = ProveedorFormulario(initial={
+      "razon_social": proveedor.razon_social,
+      "email": proveedor.email,
+      "cuil": proveedor.cuil,
+    })
+
+    return render(req, "proveedor_editar.html", {"formularioProveedor": formularioProveedor, "id" : proveedor.id})
+  
+def eliminar_proveedor(req, id):
+  if req.method == "POST":
+    proveedor = Proveedores.objects.get(id = id)
+    proveedor.delete()
+
+  lista_proveedores = Proveedores.objects.all()
+  return render(req, "proveedores.html", {"lista_proveedores": lista_proveedores})
 
 def venta_formulario(req):
 
@@ -212,3 +345,45 @@ def buscar_venta(req):
   else:
       
       return render(req, "inicio.html", {"message": "No envias el dato del numero de orden"})
+  
+def editar_venta(req, id):
+  if req.method == 'POST':
+
+    formularioVenta = VentaFormulario(req.POST)
+
+    if formularioVenta.is_valid():
+
+      data = formularioVenta.cleaned_data
+
+      venta = Ventas.objects.get(id = id)
+
+      venta.num_orden = data["num_orden"]
+      venta.fecha_venta = data["fecha_venta"]
+      venta.entregado = data["entregado"]
+
+      venta.save()
+
+      return render(req, "inicio.html", {"message": "Proveedor actualizado con éxito"})
+    
+    else:
+
+      return render(req, "inicio.html", {"message": "Datos inválidos"})
+  
+  else:
+    venta = Ventas.objects.get(id = id)
+
+    formularioVenta = VentaFormulario(initial={
+      "num_orden": venta.num_orden,
+      "fecha_venta": venta.fecha_venta,
+      "entregado": venta.entregado,
+    })
+
+    return render(req, "venta_editar.html", {"formularioVenta": formularioVenta, "id" : venta.id})
+  
+def eliminar_venta(req, id):
+  if req.method == "POST":
+    venta = Ventas.objects.get(id = id)
+    venta.delete()
+
+  lista_ventas = Ventas.objects.all()
+  return render(req, "ventas.html", {"lista_ventas": lista_ventas})

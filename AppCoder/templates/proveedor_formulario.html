@@ -1,6 +1,8 @@
 {% extends 'padre.html' %}
 
 {% block contenidoQueCambia %}
+
+<h1>Agregar proveedor</h1>
   
 <form action="{% url 'ProveedorFormulario' %}" method="post">{% csrf_token %}
 

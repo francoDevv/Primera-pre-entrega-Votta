@@ -61,3 +61,6 @@ class Ventas(models.Model):
     verbose_name_plural = 'Ventas'
     ordering = ('num_orden', 'fecha_venta', 'entregado')
     unique_together = ('num_orden', 'fecha_venta', 'entregado')
+
+  def __str__(self):
+    return f'{self.num_orden} - {self.fecha_venta} - {self.entregado}'

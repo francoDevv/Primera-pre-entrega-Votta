@@ -1,6 +1,8 @@
 {% extends 'padre.html' %}
 
 {% block contenidoQueCambia %}
+
+<h1>Agregar venta</h1>
   
 <form action="{% url 'VentaFormulario' %}" method="post">{% csrf_token %}
 
