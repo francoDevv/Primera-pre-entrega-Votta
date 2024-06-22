@@ -32,5 +32,7 @@ urlpatterns = [
     path('eliminar-venta/<int:id>', eliminar_venta, name='EliminaVenta'),
     path('login/', login_view, name = 'Login'),
     path('registrar/', registro, name = 'Registrar'),
-    path('logout/', LogoutView.as_view(template_name = "logout.html"), name = 'Logout')
+    path('logout/', LogoutView.as_view(template_name = "logout.html"), name = 'Logout'),
+    path('editar-perfil/', editar_perfil, name = 'EditaPerfil'),
+    path('agregar-avatar/', agregar_avatar, name = 'AgregarAvatar')
 ]

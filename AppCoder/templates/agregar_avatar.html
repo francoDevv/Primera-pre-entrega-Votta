@@ -1,0 +1,15 @@
+{% extends 'padre.html' %} 
+
+{% block contenidoQueCambia %}
+
+<h1>Acutalizar producto</h1>
+
+<form action="{% url 'AgregarAvatar' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+
+    {{formularioAvatar.as_p}}
+  
+    <button type="submit"> Actualizar </button>
+  
+</form>
+
+{% endblock contenidoQueCambia %}

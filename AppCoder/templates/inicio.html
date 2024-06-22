@@ -6,6 +6,10 @@
   <h1>Titulo del inicio</h1>
 
   <p>{{message}}</p>
+  
+  {%if url %}
+    <img src="{{url}}" alt="avatar" width="200px" height="200px">
+  {%endif%}
 
 {% endblock contenidoQueCambia %}
   

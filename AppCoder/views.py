@@ -1,16 +1,20 @@
 from django.shortcuts import render
-from .models import Producto, Clientes, Proveedores, Ventas
-from .forms import ProductoFormulario, ClienteFormulario, ProveedorFormulario, VentaFormulario
+from .models import *
+from .forms import *
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import DeleteView
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.admin.views.decorators import staff_member_required
 
 def inicio(req):
-
-  return render(req, "inicio.html", {})
+  try:
+    avatar = Avatar.objects.get(usuario = req.user.id)   
+    return render(req, "inicio.html", {"url": avatar.imagen.url})
+  except:
+    return render(req, "inicio.html")
 
 def sobre_mi(req):
 
@@ -130,6 +134,7 @@ class ProductoEliminar(LoginRequiredMixin, DeleteView):
     success_url = "/app-coder/productos/"
     context_object_name = 'producto'
 
+@login_required() 
 def cliente_formulario(req):
 
   print('method: ', req.method)
@@ -176,6 +181,7 @@ def buscar_cliente(req):
       
       return render(req, "inicio.html", {"message": "No envias el dato del nombre"})
   
+@login_required()  
 def editar_cliente(req, id):
   if req.method == 'POST':
 
@@ -210,6 +216,7 @@ def editar_cliente(req, id):
 
     return render(req, "cliente_editar.html", {"formularioCliente": formularioCliente, "id" : cliente.id})
   
+@login_required()   
 def eliminar_cliente(req, id):
   if req.method == "POST":
     cliente = Clientes.objects.get(id = id)
@@ -218,6 +225,7 @@ def eliminar_cliente(req, id):
   lista_clientes = Clientes.objects.all()
   return render(req, "clientes.html", {"lista_clientes": lista_clientes})
 
+@login_required() 
 def proveedor_formulario(req):
 
   print('method: ', req.method)
@@ -263,7 +271,8 @@ def buscar_proveedor(req):
   else:
       
       return render(req, "inicio.html", {"message": "No envias el dato de la razon_social"})
-  
+
+@login_required()   
 def editar_proveedor(req, id):
   if req.method == 'POST':
 
@@ -297,7 +306,8 @@ def editar_proveedor(req, id):
     })
 
     return render(req, "proveedor_editar.html", {"formularioProveedor": formularioProveedor, "id" : proveedor.id})
-  
+
+@login_required()   
 def eliminar_proveedor(req, id):
   if req.method == "POST":
     proveedor = Proveedores.objects.get(id = id)
@@ -306,6 +316,7 @@ def eliminar_proveedor(req, id):
   lista_proveedores = Proveedores.objects.all()
   return render(req, "proveedores.html", {"lista_proveedores": lista_proveedores})
 
+@login_required() 
 def venta_formulario(req):
 
   print('method: ', req.method)
@@ -351,7 +362,8 @@ def buscar_venta(req):
   else:
       
       return render(req, "inicio.html", {"message": "No envias el dato del numero de orden"})
-  
+
+@login_required()   
 def editar_venta(req, id):
   if req.method == 'POST':
 
@@ -385,7 +397,8 @@ def editar_venta(req, id):
     })
 
     return render(req, "venta_editar.html", {"formularioVenta": formularioVenta, "id" : venta.id})
-  
+
+@login_required()   
 def eliminar_venta(req, id):
   if req.method == "POST":
     venta = Ventas.objects.get(id = id)
@@ -446,3 +459,61 @@ def registro(req):
     formularioRegistro = UserCreationForm()
 
     return render(req, "registro.html", {"formularioRegistro": formularioRegistro})
+
+@login_required()   
+def editar_perfil(req):
+  usuario = req.user
+
+  if req.method == 'POST':
+
+    formularioPerfil = EditarPerfilFormulario(req.POST, instance = req.user)
+
+    if formularioPerfil.is_valid():
+
+      data = formularioPerfil.cleaned_data
+
+      usuario.first_name = data["first_name"]
+      usuario.last_name = data["last_name"]
+      usuario.email = data["email"]
+      usuario.set_password(data["password"])
+
+      usuario.save()
+
+      return render(req, "inicio.html", {"message": "Perfil actualizado con éxito"})
+    
+    else:
+
+      return render(req, "inicio.html", {"message": "Datos inválidos"})
+  
+  else:
+    formularioPerfil = EditarPerfilFormulario(instance = req.user)
+
+    return render(req, "editar_perfil.html", {"formularioPerfil": formularioPerfil})
+  
+# @staff_member_required(login_url="/app-coder/login")   
+@staff_member_required
+def agregar_avatar(req):
+  usuario = req.user
+
+  if req.method == 'POST':
+
+    formularioAvatar = AvatarFormulario(req.POST, req.FILES)
+
+    if formularioAvatar.is_valid():
+
+      data = formularioAvatar.cleaned_data
+
+      avatar = Avatar(usuario = req.user, imagen = data["imagen"])
+
+      avatar.save()
+
+      return render(req, "inicio.html", {"message": "Avatar actualizado con éxito"})
+    
+    else:
+
+      return render(req, "inicio.html", {"message": "Error al cargar el avatar"})
+  
+  else:
+    formularioAvatar = AvatarFormulario(instance = req.user)
+
+    return render(req, "agregar_avatar.html", {"formularioAvatar": formularioAvatar})

@@ -11,6 +11,9 @@
     <a class="navbar-brand" href="{% url 'SobreMi' %}">Sobre mí</a>
     {%if user.is_authenticated%}
       <span>Bienvenido {{user.username}}</span>
+      {%if request.user.avatar%}
+        <img src="{{request.user.avatar.imagen.url}}" alt="imagen avatar" height="40px">
+      {%endif%}
       <form action="{%url 'Logout'%}" method="post"> {% csrf_token %}
         <button type="submit" class="btn btn-warning" >Cerrar sesión</button>
       </form>
