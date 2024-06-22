@@ -9,6 +9,14 @@
     <a class="navbar-brand" href="{% url 'Proveedores' %}">Proveedores</a>
     <a class="navbar-brand" href="{% url 'Ventas' %}">Ventas</a>
     <a class="navbar-brand" href="{% url 'SobreMi' %}">Sobre mí</a>
-    <a class="btn btn-primary" href="#">Ingresar</a>
+    {%if user.is_authenticated%}
+      <span>Bienvenido {{user.username}}</span>
+      <form action="{%url 'Logout'%}" method="post"> {% csrf_token %}
+        <button type="submit" class="btn btn-warning" >Cerrar sesión</button>
+      </form>
+    {%else%}
+      <a class="btn btn-primary" href="{%url 'Login'%}">Ingresar</a>
+      <a class="btn btn-secondary" href="{%url 'Registrar'%}">Registrate</a>
+    {%endif%}
   </div>
 </nav>

@@ -3,6 +3,10 @@ from .models import Producto, Clientes, Proveedores, Ventas
 from .forms import ProductoFormulario, ClienteFormulario, ProveedorFormulario, VentaFormulario
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import DeleteView
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 def inicio(req):
 
@@ -36,6 +40,7 @@ def lista_ventas(req):
 
   return render(req, "ventas.html", {"lista_ventas": ventas})
 
+@login_required()
 def producto_formulario(req):
   if req.method == 'POST':
 
@@ -78,7 +83,8 @@ def buscar_producto(req):
   else:
       
       return render(req, "inicio.html", {"message": "No envias el dato del nombre"})
-  
+
+@login_required() 
 def editar_producto(req, id):
   if req.method == 'POST':
 
@@ -113,12 +119,12 @@ def editar_producto(req, id):
 
     return render(req, "producto_editar.html", {"formularioProducto": formularioProducto, "id" : producto.id})
   
-class ProductoDetalle(DetailView):
+class ProductoDetalle(LoginRequiredMixin, DetailView):
     model = Producto
     template_name = "producto_detalle.html"
     context_object_name = "producto"
 
-class ProductoEliminar(DeleteView):
+class ProductoEliminar(LoginRequiredMixin, DeleteView):
     model = Producto
     template_name = 'producto_eliminar.html'
     success_url = "/app-coder/productos/"
@@ -363,7 +369,7 @@ def editar_venta(req, id):
 
       venta.save()
 
-      return render(req, "inicio.html", {"message": "Proveedor actualizado con éxito"})
+      return render(req, "inicio.html", {"message": "Venta actualizado con éxito"})
     
     else:
 
@@ -387,3 +393,56 @@ def eliminar_venta(req, id):
 
   lista_ventas = Ventas.objects.all()
   return render(req, "ventas.html", {"lista_ventas": lista_ventas})
+
+def login_view(req):
+  if req.method == 'POST':
+
+    formularioLogin = AuthenticationForm(req, data = req.POST)
+
+    if formularioLogin.is_valid():
+
+      data = formularioLogin.cleaned_data
+
+      nombre_usuario = data["username"]
+      contrasena = data["password"]
+
+      usuario = authenticate(username = nombre_usuario, password = contrasena)
+
+      if usuario:
+        login(req, usuario)
+        return render(req, "inicio.html", {"message": f"Bienvenido {nombre_usuario}"})
+      
+      else:
+        return render(req, "inicio.html", {"message": "Credenciales incorrectas"})
+        
+    else:
+      return render(req, "inicio.html", {"message": "Datos inválidos"})
+  
+  else:
+
+    formularioLogin = AuthenticationForm()
+
+    return render(req, "login.html", {"formularioLogin": formularioLogin})
+  
+def registro(req):
+  if req.method == 'POST':
+
+    formularioRegistro = UserCreationForm(req.POST)
+
+    if formularioRegistro.is_valid():
+
+      data = formularioRegistro.cleaned_data
+
+      nombre_usuario = data["username"]
+      formularioRegistro.save()
+      
+      return render(req, "inicio.html", {"message":f"Usuario {nombre_usuario} registrado con éxito!"})
+        
+    else:
+      return render(req, "inicio.html", {"message": "Datos inválidos"})
+  
+  else:
+
+    formularioRegistro = UserCreationForm()
+
+    return render(req, "registro.html", {"formularioRegistro": formularioRegistro})
