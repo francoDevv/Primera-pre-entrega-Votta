@@ -52,9 +52,3 @@ class AvatarFormulario(forms.ModelForm):
   class Meta:
     model = Avatar
     fields = ["imagen"]
-
-class RegistrarFormulario(forms.ModelForm):
-  password = forms.CharField(label="Constraseña", widget=forms.PasswordInput)
-  class Meta:
-    model = User
-    fields = ['username', 'password', 'email']

@@ -44,7 +44,7 @@ def lista_ventas(req):
 
   return render(req, "ventas.html", {"lista_ventas": ventas})
 
-# @staff_member_required(login_url="/app-coder/login")
+@staff_member_required(login_url="/app-coder/login")
 def producto_formulario(req):
   if req.method == 'POST':
 
@@ -444,7 +444,7 @@ def login_view(req):
 def registro(req):
   if req.method == 'POST':
 
-    formularioRegistro = RegistrarFormulario(req.POST)
+    formularioRegistro = UserCreationForm(req.POST)
 
     if formularioRegistro.is_valid():
 
@@ -460,7 +460,7 @@ def registro(req):
   
   else:
 
-    formularioRegistro = RegistrarFormulario()
+    formularioRegistro = UserCreationForm()
 
     return render(req, "registro.html", {"formularioRegistro": formularioRegistro})
 
@@ -494,10 +494,8 @@ def editar_perfil(req):
 
     return render(req, "editar_perfil.html", {"formularioPerfil": formularioPerfil})
   
-staff_member_required(login_url="/app-coder/login")   
+@staff_member_required(login_url="/app-coder/login")   
 def agregar_avatar(req):
-  usuario = req.user
-
   if req.method == 'POST':
 
     formularioAvatar = AvatarFormulario(req.POST, req.FILES)
