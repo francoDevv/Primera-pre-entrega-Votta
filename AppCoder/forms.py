@@ -6,8 +6,10 @@ from .models import Avatar
 class ProductoFormulario(forms.Form):
 
   nombre = forms.CharField()
+  categoria = forms.CharField()
   precio = forms.IntegerField()
   cantidad = forms.IntegerField()
+  descripcion = forms.CharField()
 
 class ClienteFormulario(forms.Form):
 
@@ -50,3 +52,9 @@ class AvatarFormulario(forms.ModelForm):
   class Meta:
     model = Avatar
     fields = ["imagen"]
+
+class RegistrarFormulario(forms.ModelForm):
+  password = forms.CharField(label="Constraseña", widget=forms.PasswordInput)
+  class Meta:
+    model = User
+    fields = ['username', 'password', 'email']

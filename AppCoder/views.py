@@ -44,7 +44,7 @@ def lista_ventas(req):
 
   return render(req, "ventas.html", {"lista_ventas": ventas})
 
-@login_required()
+# @staff_member_required(login_url="/app-coder/login")
 def producto_formulario(req):
   if req.method == 'POST':
 
@@ -54,7 +54,7 @@ def producto_formulario(req):
 
       data = formularioProducto.cleaned_data
 
-      nuevo_producto = Producto(nombre=data['nombre'], precio=data['precio'], cantidad=data['cantidad'])
+      nuevo_producto = Producto(nombre=data['nombre'], categoria=data['categoria'], precio=data['precio'], cantidad=data['cantidad'], descripcion=data['descripcion'])
       nuevo_producto.save()
 
       return render(req, "inicio.html", {"message": "Producto creado con éxito"})
@@ -101,8 +101,10 @@ def editar_producto(req, id):
       producto = Producto.objects.get(id = id)
 
       producto.nombre = data["nombre"]
+      producto.categoria = data["categoria"]
       producto.precio = data["precio"]
       producto.cantidad = data["cantidad"]
+      producto.descripcion = data["descripcion"]
 
       producto.save()
 
@@ -117,8 +119,10 @@ def editar_producto(req, id):
 
     formularioProducto = ProductoFormulario(initial={
       "nombre": producto.nombre,
+      "categoria": producto.categoria,
       "precio": producto.precio,
       "cantidad": producto.cantidad,
+      "descripcion": producto.descripcion
     })
 
     return render(req, "producto_editar.html", {"formularioProducto": formularioProducto, "id" : producto.id})
@@ -440,7 +444,7 @@ def login_view(req):
 def registro(req):
   if req.method == 'POST':
 
-    formularioRegistro = UserCreationForm(req.POST)
+    formularioRegistro = RegistrarFormulario(req.POST)
 
     if formularioRegistro.is_valid():
 
@@ -456,7 +460,7 @@ def registro(req):
   
   else:
 
-    formularioRegistro = UserCreationForm()
+    formularioRegistro = RegistrarFormulario()
 
     return render(req, "registro.html", {"formularioRegistro": formularioRegistro})
 
@@ -490,8 +494,7 @@ def editar_perfil(req):
 
     return render(req, "editar_perfil.html", {"formularioPerfil": formularioPerfil})
   
-# @staff_member_required(login_url="/app-coder/login")   
-@staff_member_required
+staff_member_required(login_url="/app-coder/login")   
 def agregar_avatar(req):
   usuario = req.user
 

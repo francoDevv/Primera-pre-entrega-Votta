@@ -5,8 +5,10 @@ from django.contrib.auth.models import User
 class Producto(models.Model):
 
   nombre = models.CharField(max_length=40)
+  categoria = models.CharField(max_length=40)
   precio = models.IntegerField()
   cantidad = models.IntegerField()
+  descripcion = models.CharField(max_length=100)
 
   def __str__(self):
     return f'{self.nombre} - {self.precio} - {self.cantidad}'
@@ -69,3 +71,9 @@ class Ventas(models.Model):
 class Avatar(models.Model):
   usuario = models.OneToOneField(User, on_delete=models.CASCADE)
   imagen = models.ImageField(upload_to='avatares', blank=True, null=True)
+
+# class RegistrarUsuario(models.Model):
+#   username = models.CharField(max_length=30) 
+#   password = models.CharField(max_length=30)
+#   passwordConfirm = models.CharField(max_length=30)
+#   email = models.EmailField()
